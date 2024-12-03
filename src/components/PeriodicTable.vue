@@ -10,8 +10,10 @@ const streak = ref(0);
 const maxStreak = ref(0);
 const hintsLeft = ref(3);
 const gameStarted = ref(false);
+const showFinalModal = ref(false);
 
 const score = computed(() => `${revealedElements.value.size}/${totalElements}`);
+const hintsUsed = computed(() => 3 - hintsLeft.value);
 
 const checkInput = () => {
   if (!gameStarted.value) return;
@@ -52,6 +54,7 @@ const resetGame = () => {
   maxStreak.value = 0;
   timeLeft.value = 300;
   hintsLeft.value = 3;
+  showFinalModal.value = false;
 };
 
 const startGame = () => {
@@ -64,7 +67,10 @@ const startGame = () => {
       timeLeft.value--;
     } else {
       clearInterval(timer);
-      gameStarted.value = false; // End game when time runs out
+      if (gameStarted.value) {
+        gameStarted.value = false;
+        showFinalModal.value = true; // Show modal when the game ends
+      }
     }
   }, 1000);
 };
@@ -76,7 +82,7 @@ const startGame = () => {
     <div v-if="!gameStarted" class="flex justify-center my-8">
       <button
         @click="startGame"
-        class="px-6 py-3 bg-green-500 text-white rounded text-lg font-bold"
+        class="px-6 py-3 bg-green-600 text-white rounded text-lg font-bold"
       >
         Start Game
       </button>
@@ -94,7 +100,7 @@ const startGame = () => {
 
     <!-- Periodic Table -->
     <div
-      class="grid relative gap-1 grid-cols-18 rounded-md p-3 bg-neutral-100"
+      class="grid relative gap-1 grid-cols-18"
       :class="{ 'opacity-50 pointer-events-none': !gameStarted }"
     >
       <div
@@ -118,7 +124,7 @@ const startGame = () => {
             ? 'bg-pink-500 hover:bg-pink-600 transition-all text-white'
             : element.group === 'nobleGas'
             ? 'bg-orange-500 hover:bg-orange-600 transition-all text-white'
-            : 'bg-neutral-200 hover:bg-neutral-300 transition-all',
+            : 'bg-gray-200 hover:bg-gray-300 transition-all',
         ]"
       >
         <div v-if="revealedElements.has(element.name)">
@@ -151,7 +157,7 @@ const startGame = () => {
       />
       <button
         @click="checkInput"
-        class="ml-2 px-4 py-2 bg-neutral-800 text-white rounded"
+        class="ml-2 px-4 py-2 bg-blue-700 text-white rounded"
       >
         Submit
       </button>
@@ -168,6 +174,27 @@ const startGame = () => {
       >
         Reset
       </button>
+    </div>
+
+    <!-- Final Score Modal -->
+    <div
+      v-if="showFinalModal"
+      class="fixed inset-0 flex text-center justify-center items-center bg-black bg-opacity-50 z-50"
+    >
+      <div class="bg-white p-6 rounded shadow-lg w-96">
+        <h2 class="text-xl font-bold mb-4 text-center">Game Over!</h2>
+        <p class="text-lg mb-2">Final Score: {{ score }}</p>
+        <p class="text-lg mb-2">Longest Streak: {{ maxStreak }}</p>
+        <p class="text-lg mb-4">Hints Used: {{ hintsUsed }}</p>
+        <div class="flex justify-center">
+          <button
+            @click="resetGame"
+            class="px-6 py-3 bg-blue-500 text-white rounded text-lg font-bold"
+          >
+            Play Again
+          </button>
+        </div>
+      </div>
     </div>
   </div>
 </template>

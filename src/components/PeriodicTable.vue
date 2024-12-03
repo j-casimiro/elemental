@@ -1,10 +1,24 @@
 <script setup lang="ts">
+import { ref } from 'vue';
 import { elements } from '../utils/elements';
+
+const revealedElements = ref<Set<string>>(new Set());
+const userInput = ref('');
+
+const checkInput = () => {
+  const inputName = userInput.value.trim();
+  const element = elements.find(
+    (el) => el.name.toLowerCase() === inputName.toLowerCase()
+  );
+  if (element && !revealedElements.value.has(element.name)) {
+    revealedElements.value.add(element.name);
+  }
+  userInput.value = '';
+};
 </script>
 
 <template>
   <div class="p-4 mx-auto max-w-screen-xl">
-    <!-- Periodic Table Grid -->
     <div class="grid relative gap-1 grid-cols-18">
       <div
         v-for="element in elements"
@@ -14,7 +28,7 @@ import { elements } from '../utils/elements';
           gridRowStart: element.rowStart,
         }"
         :class="[
-          'border rounded p-4 text-center text-xs relative',
+          'border rounded p-4 text-center text-xs relative cursor-default',
           element.group === 'nonmetal'
             ? 'bg-blue-500 hover:bg-blue-600 transition-all text-white'
             : element.group === 'alkaliMetal'
@@ -30,20 +44,41 @@ import { elements } from '../utils/elements';
             : 'bg-gray-200 hover:bg-gray-300 transition-all',
         ]"
       >
-        <div class="absolute top-0 left-1 text-[10px] font-bold">
-          {{ element.atomicNumber }}
-        </div>
+        <!-- Show this if revealed -->
+        <div v-if="revealedElements.has(element.name)">
+          <div class="absolute top-0 left-1 text-[10px] font-bold">
+            {{ element.atomicNumber }}
+          </div>
 
-        <div class="flex justify-center items-center h-full text-lg font-bold">
-          {{ element.symbol }}
+          <div
+            class="flex justify-center items-center h-full text-xl font-bold"
+          >
+            {{ element.symbol }}
+          </div>
+          <div
+            class="absolute bottom-1 left-1/2 transform -translate-x-1/2 text-[7px] font-semibold w-full text-center break-words"
+          >
+            {{ element.name }}
+          </div>
         </div>
-
-        <div
-          class="absolute bottom-1 left-1/2 transform -translate-x-1/2 text-[7px] font-semibold w-full text-center break-words"
-        >
-          {{ element.name }}
-        </div>
+        <div v-else class="p-[14px]"></div>
       </div>
+    </div>
+
+    <div class="mt-8 flex justify-center">
+      <input
+        v-model="userInput"
+        @keydown.enter="checkInput"
+        type="text"
+        placeholder="Enter element name..."
+        class="p-2 border rounded w-96"
+      />
+      <button
+        @click="checkInput"
+        class="ml-2 px-4 py-2 bg-neutral-800 text-white rounded"
+      >
+        Submit
+      </button>
     </div>
   </div>
 </template>

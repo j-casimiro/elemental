@@ -1,7 +1,14 @@
 <script setup lang="ts">
 import { useStore } from '../store';
+import { useRouter } from 'vue-router';
 
 const store = useStore();
+const router = useRouter();
+
+const handlePlayAgain = () => {
+  store.resetGame(); // Reset the game state
+  router.push({ name: 'Menu' }); // Navigate to the menu
+};
 </script>
 
 <template>
@@ -12,7 +19,7 @@ const store = useStore();
     <p class="mb-4 text-lg">Hints Used: {{ store.hintsUsed }}</p>
     <div class="flex justify-center">
       <button
-        @click="store.resetGame"
+        @click="handlePlayAgain"
         class="px-6 py-3 text-lg font-bold text-white bg-blue-500 rounded"
       >
         Play Again

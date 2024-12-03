@@ -1,7 +1,7 @@
-<script setup lang="ts">
-import PeriodicTable from './components/PeriodicTable.vue';
+<script setup>
+import { RouterView } from 'vue-router';
 </script>
 
 <template>
-  <PeriodicTable />
+  <RouterView />
 </template>

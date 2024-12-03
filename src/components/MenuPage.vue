@@ -15,7 +15,7 @@ const startGame = () => {
 
   // Navigate to the Periodic Table page with the query parameters
   router.push({
-    name: 'PeriodicTable',
+    name: 'MainGame',
   });
 };
 </script>

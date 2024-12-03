@@ -1,6 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import MenuPage from '../components/MenuPage.vue';
-import PeriodicTable from '../components/PeriodicTable.vue';
+import MainGame from '../components/MainGame.vue';
 
 const routes = [
   {
@@ -9,9 +9,9 @@ const routes = [
     component: MenuPage,
   },
   {
-    path: '/periodic-table',
-    name: 'PeriodicTable',
-    component: PeriodicTable,
+    path: '/main-game',
+    name: 'MainGame',
+    component: MainGame,
   },
 ];
 

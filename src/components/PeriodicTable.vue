@@ -1,11 +1,41 @@
 <script setup lang="ts">
 import { elements } from '../utils/elements';
+import FinalScore from './FinalScore.vue';
+import { useStore } from '../store';
+
+const store = useStore();
 </script>
 
 <template>
   <div class="p-4 mx-auto max-w-screen-xl">
-    <!-- Periodic Table Grid -->
-    <div class="grid relative gap-1 grid-cols-18">
+    <!-- Start Button -->
+    <div v-if="!store.gameStarted" class="flex justify-center my-8">
+      <button
+        @click="store.startGame"
+        class="px-6 py-3 text-lg font-bold text-white bg-green-600 rounded"
+      >
+        Start Game
+      </button>
+    </div>
+
+    <!-- Game Info -->
+    <div
+      v-if="store.gameStarted"
+      class="flex justify-between items-center mb-4"
+    >
+      <div class="text-lg font-bold">Score: {{ store.score }}</div>
+      <div class="text-lg font-bold">Time Left: {{ store.timeLeft }}s</div>
+      <div class="text-lg font-bold">
+        Streak: {{ store.streak }} (Max: {{ store.maxStreak }})
+      </div>
+      <div class="text-lg font-bold">Hints Left: {{ store.hintsLeft }}</div>
+    </div>
+
+    <!-- Periodic Table -->
+    <div
+      class="grid relative gap-1 grid-cols-18"
+      :class="{ 'opacity-50 pointer-events-none': !store.gameStarted }"
+    >
       <div
         v-for="element in elements"
         :key="element.atomicNumber"
@@ -14,7 +44,7 @@ import { elements } from '../utils/elements';
           gridRowStart: element.rowStart,
         }"
         :class="[
-          'border rounded p-4 text-center text-xs relative',
+          'border rounded p-4 text-center text-xs relative cursor-default',
           element.group === 'nonmetal'
             ? 'bg-blue-500 hover:bg-blue-600 transition-all text-white'
             : element.group === 'alkaliMetal'
@@ -30,20 +60,65 @@ import { elements } from '../utils/elements';
             : 'bg-gray-200 hover:bg-gray-300 transition-all',
         ]"
       >
-        <div class="absolute top-0 left-1 text-[10px] font-bold">
-          {{ element.atomicNumber }}
+        <div v-if="store.revealedElements.has(element.name)">
+          <div class="absolute top-0 left-1 text-[10px] font-bold">
+            {{ element.atomicNumber }}
+          </div>
+          <div
+            class="flex justify-center items-center h-full text-xl font-bold"
+          >
+            {{ element.symbol }}
+          </div>
+          <div
+            class="absolute bottom-1 left-1/2 transform -translate-x-1/2 text-[7px] font-semibold w-full text-center break-words"
+          >
+            {{ element.name }}
+          </div>
         </div>
-
-        <div class="flex justify-center items-center h-full text-lg font-bold">
-          {{ element.symbol }}
-        </div>
-
-        <div
-          class="absolute bottom-1 left-1/2 transform -translate-x-1/2 text-[7px] font-semibold w-full text-center break-words"
-        >
-          {{ element.name }}
-        </div>
+        <div v-else class="p-[14px]"></div>
       </div>
+    </div>
+
+    <!-- Input Section -->
+    <div v-if="store.gameStarted" class="flex justify-center mt-8">
+      <input
+        v-model="store.userInput"
+        @keydown.enter="store.checkInput"
+        type="text"
+        placeholder="Enter element name..."
+        class="p-2 w-96 rounded border"
+      />
+      <button
+        @click="store.checkInput"
+        class="px-4 py-2 ml-2 text-white bg-blue-700 rounded"
+      >
+        Submit
+      </button>
+      <button
+        @click="store.useHint"
+        class="px-4 py-2 ml-2 text-white bg-yellow-500 rounded"
+        :disabled="store.hintsLeft === 0"
+      >
+        Use Hint
+      </button>
+      <button
+        @click="store.resetGame"
+        class="px-4 py-2 ml-2 text-white bg-red-500 rounded"
+      >
+        Reset
+      </button>
+    </div>
+
+    <!-- Final Score Modal -->
+    <div
+      v-if="store.showFinalModal"
+      class="flex fixed inset-0 z-50 justify-center items-center text-center bg-black bg-opacity-50"
+    >
+      <FinalScore
+        :score="store.score"
+        :maxStreak="store.maxStreak"
+        :hintsUsed="store.hintsUsed"
+      />
     </div>
   </div>
 </template>

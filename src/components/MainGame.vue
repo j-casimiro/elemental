@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import FinalScore from './FinalScore.vue';
+import PeriodicTable from './PeriodicTable.vue';
 import { onMounted, onUnmounted } from 'vue';
 import { useRouter } from 'vue-router';
 import { useStore } from '../store';
-import PeriodicTable from './PeriodicTable.vue';
 
 const router = useRouter();
 const store = useStore();

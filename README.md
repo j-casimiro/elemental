@@ -1,5 +1,19 @@
-# Vue 3 + TypeScript + Vite
+# Periodic Table Quiz Game
 
-This template should help get you started developing with Vue 3 and TypeScript in Vite. The template uses Vue 3 `<script setup>` SFCs, check out the [script setup docs](https://v3.vuejs.org/api/sfc-script-setup.html#sfc-script-setup) to learn more.
+A fun and educational game to test your knowledge of the periodic table! The game challenges players to name chemical elements based on hints, tracks scores, streaks, and allows hints to assist when needed.
 
-Learn more about the recommended Project Setup and IDE Support in the [Vue Docs TypeScript Guide](https://vuejs.org/guide/typescript/overview.html#project-setup).
+![elemental](https://github.com/user-attachments/assets/3f642185-5508-4d35-898f-f8a2aa31728e)
+
+## Features
+
+- **Start Game**: Begin the quiz and race against the clock!
+- **Real-Time Feedback**: Track your score, time left, streaks, and hints used.
+- **Hints**: Reveal random elements to aid your progress.
+- **Dynamic UI**: Responsive design with color-coded element groups.
+- **Final Score Modal**: View your performance at the end of the game.
+
+## Technologies
+
+- **Frontend**: Vue 3 + TypeScript
+- **State Management**: Pinia
+- **Styling**: TailwindCSS

@@ -1,4 +1,4 @@
-# Periodic Table Quiz Game
+# Elemental: Periodic Table Quiz Game
 
 A fun and educational game to test your knowledge of the periodic table! The game challenges players to name chemical elements based on hints, tracks scores, streaks, and allows hints to assist when needed.
 

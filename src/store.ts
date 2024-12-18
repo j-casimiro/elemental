@@ -22,10 +22,8 @@ export const useStore = defineStore('store', () => {
   const checkInput = () => {
     if (!gameStarted.value) return;
 
-    const inputName = userInput.value.trim();
-    const element = elements.find(
-      (el) => el.name.toLowerCase() === inputName.toLowerCase()
-    );
+    const inputName = userInput.value.trim().toLowerCase();
+    const element = elements.find((el) => el.name.toLowerCase() === inputName);
 
     if (element && !revealedElements.value.has(element.name)) {
       revealedElements.value.add(element.name);
@@ -54,12 +52,10 @@ export const useStore = defineStore('store', () => {
   };
 
   const resetGame = () => {
-    // Clear saved game state in localStorage
     localStorage.removeItem('gameState');
     localStorage.removeItem('startTime');
     localStorage.removeItem('revealedElements');
 
-    // Reset game state variables
     gameStarted.value = false;
     revealedElements.value.clear();
     streak.value = 0;
@@ -72,7 +68,6 @@ export const useStore = defineStore('store', () => {
     resetGame(); // Reset before starting a new game
     gameStarted.value = true;
 
-    // Store start time and game state in localStorage
     const currentTime = Date.now(); // Get the current timestamp
     localStorage.setItem('startTime', currentTime.toString());
     localStorage.setItem(
@@ -85,28 +80,20 @@ export const useStore = defineStore('store', () => {
         hintsLeft: hintsLeft.value,
       })
     );
-    // Save revealed elements to localStorage
     localStorage.setItem(
       'revealedElements',
-      JSON.stringify([...revealedElements.value])
+      JSON.stringify(Array.from(revealedElements.value))
     );
 
-    // Start the timer if the game has started
     if (gameStarted.value) {
-      // Clear any existing timer before starting a new one
-      if (timerId.value) {
-        clearInterval(timerId.value);
-      }
-
+      if (timerId.value) clearInterval(timerId.value);
       timerId.value = setInterval(() => {
         if (timeLeft.value > 0 && gameStarted.value) {
-          timeLeft.value--; // Decrement the time
+          timeLeft.value--;
         } else {
           clearInterval(timerId.value!);
-          if (gameStarted.value) {
-            gameStarted.value = false;
-            showFinalModal.value = true; // Show the final modal when game ends
-          }
+          gameStarted.value = false;
+          showFinalModal.value = true; // Show the final modal when game ends
         }
       }, 1000);
     }
